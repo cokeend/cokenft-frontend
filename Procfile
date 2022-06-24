@@ -1,1 +1,1 @@
-web: npm run start
+web: vue-cli-service serve
