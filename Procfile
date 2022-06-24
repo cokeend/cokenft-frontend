@@ -1,1 +1,1 @@
-web: npm serve
+web: serve -s dist
