@@ -4,7 +4,7 @@
   "description": "Free Open Source Template Dashboard Admin Vue Tailwind CSS",
   "private": false,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "start": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "windsass": "sass --watch src/assets/sass/app.windzo.scss src/assets/sass/css/windzo.css",
     "require": "npm i -g sass @vue/cli"
