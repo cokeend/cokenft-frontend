@@ -1,1 +1,1 @@
-web: serve -s dist
+web: vue-cli-service serve
