@@ -8,7 +8,7 @@
     "build": "vue-cli-service build",
     "windsass": "sass --watch src/assets/sass/app.windzo.scss src/assets/sass/css/windzo.css",
     "require": "npm i -g sass @vue/cli",
-    "heroku-postbuild": "npm install && npm run build" // this will be run on Heroku
+    "heroku-postbuild": "npm i -g sass @vue/cli"
   },
   "repository": {
     "type": "git",
