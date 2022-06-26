@@ -29,7 +29,7 @@
         <h2
           class="text-md text-indigo-800 ml-3 lg:block hidden px-5 p-2 rounded-md bg-indigo-200"
         >
-          Welcome back, Mohammad Sahrullah
+          Welcome back
         </h2>
       </div>
       <div class="mr-5 flex">

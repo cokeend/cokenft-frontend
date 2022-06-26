@@ -17,7 +17,7 @@
                 d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"
               ></path>
             </svg>
-           Maloanwax Dashboard {{ testimage }}
+           Maloanwax Dashboard
           </a>
         </li>
       </ol>
@@ -156,12 +156,12 @@
                 width="30px"
                 height="30px"
                 preserveAspectRatio="xMidYMid meet"
-                viewBox="0 0 16 16"
+                viewBox="0 0 24 24"
               >
                 <g fill="currentColor">
-                  <path d="M15 13v1H1.5l-.5-.5V0h1v13h13Z" />
+                  <path d="M0 13v0H24l-24V0h1v13h13Z" />
                   <path
-                    d="M13 3.207L7.854 8.354h-.708L5.5 6.707l-3.646 3.647l-.708-.708l4-4h.708L7.5 7.293l5.146-5.147h.707l2 2l-.707.708L13 3.207Z"
+                    d="M14 14.252V22H4a8 8 0 0 1 10-7.748zM12 13c-3.315 0-6-2.685-6-6s2.685-6 6-6 6 2.685 6 6-2.685 6-6 6zm6.586 4l-1.829-1.828 1.415-1.415L22.414 18l-4.242 4.243-1.415-1.415L18.586 19H15v-2h3.586z"
                   />
                 </g>
               </svg>
@@ -420,9 +420,9 @@
       <div
         class="mt-2 bg-white dark:bg-gray-800 p-5 w-full rounded-md box-border shadow"
       >
-        <h2 class="font-bold text-lg text-gray-800 dark:text-gray-200">475</h2>
+        <h2 class="font-bold text-lg text-gray-800 dark:text-gray-200">{{current_customer}}</h2>
         <p class="text-gray-400 font-lexend font-normal">
-          User signups this week
+          Current Customers classified by days
         </p>
 
         <div class="wrapper-chart mt-5">
@@ -431,7 +431,7 @@
             height="380"
             type="pie"
             :options="optionsDonut"
-            :series="seriesDonut"
+            :series="seriesDayStake"
           ></apexchart>
           <div class="p-3"></div>
           <br />
@@ -512,9 +512,9 @@
           <option value="">Last 7 years</option>
         </select>
         <button
-          class="uppercase float-right -mt-7 border-b border-red-600 text-red-600"
+          class="uppercase float-right -mt-7 border-b border-red-600 text-red-600" 
         >
-          Transaction Report
+         <a href="https://wax.bloks.io/account/maloanwaxme1" target="_blank"> Transaction Report </a>
         </button>
       </div>
     </div>
@@ -672,9 +672,9 @@ import { thisExpression } from "@babel/types";
           },
           legend: false,
           dataLabels: {
-            enabled: false,
+            enabled: true,
           },
-          labels: ["admin", "SuperAdmin", "User", "Costumer"],
+          labels: ["1 Day", "3 Days", "7 Days", "15 Days" , "30 Days"],
         },
 
         seriesDonut: [20, 15, 63, 83],
@@ -758,6 +758,7 @@ import { thisExpression } from "@babel/types";
           "maloanwaxmee",
           "maloanwaxmef",
         ],
+        seriesDayStake : [0,0,0,0,0],
 
 
       };
@@ -830,6 +831,50 @@ import { thisExpression } from "@babel/types";
           //  console.log(rows)
             this.current_customer = rows.length
           //  console.log(this.current_customer)
+          }
+
+            //this.pool_remain = res.data.rows[0].balance
+        })
+        .catch(e => {console.log(e);
+        });
+      },
+
+      async getDayStakeSeries(){
+        await waxs.post(`/v1/chain/get_table_rows`,{
+          json: true,
+          code: "maloanwaxme1",
+          scope: "maloanwaxme1",
+          table: "stakinglist",
+          limit : 100,
+        })
+        .then(res => {
+          if(res.status = 200){
+            var rows = res.data.rows;
+           // console.log(rows[res.data.rows.length-1].id)
+
+            for(var i=0;i<rows.length;i++){
+              var start = new Date(rows[i].start)
+              var expire = new Date(rows[i].expire)
+              //console.log(expire.getDate() + start.getDate() )
+              var days = Math.round((expire-start)/(1000*60*60*24))
+
+              if(days == 1){
+                this.seriesDayStake[0] +=1
+              }else if(days == 3){
+                this.seriesDayStake[1] +=1
+              }
+              else if(days == 7){
+                this.seriesDayStake[2] +=1
+              }
+              else if(days == 15){
+                this.seriesDayStake[3] +=1
+              }
+              else if(days == 30){
+                this.seriesDayStake[4] +=1
+              }
+            }
+            console.log(this.seriesDayStake)
+
           }
 
             //this.pool_remain = res.data.rows[0].balance
@@ -945,22 +990,14 @@ import { thisExpression } from "@babel/types";
              date_check = new Date(lastweek)
               for(var i_date = 0;i_date < 7;i_date++){
 
-               //console.log( res.data.actions[i].timestamp +" < " +new Date(date_check.setDate(date_check.getDate() + 1)).toISOString())
-               // console.log( res.data.actions[i].timestamp +" >= " +date_check)
               if(res.data.actions[i].timestamp >= date_check.toISOString() && res.data.actions[i].timestamp < new Date(date_check.setDate(date_check.getDate() + 1)).toISOString()){
 
                 console.log("true");
                 if(res.data.actions[i].act.name == "transfer" && res.data.actions[i].act.data.from == "maloanwaxme1" && res.data.actions[i].act.data.to != "maloanwallet"){
-                /* this.last_history[count].tx_id = res.data.actions[i].trx_id
-                  this.last_history[count].date = res.data.actions[i].timestamp
-                  this.last_history[count].quantity = res.data.actions[i].act.data.amount
-                  console.log(res.data.actions[i].act)
-                  count++;*/
+
 
                   this.seriesStake[0].data[i_date] += res.data.actions[i].act.data.amount
                   this.seriesStake[0].total += res.data.actions[i].act.data.amount
-
-                 // console.log("day "+(i_date+1)+": add "+res.data.actions[i].act.data.amount)
 
                 }
               }
@@ -971,17 +1008,6 @@ import { thisExpression } from "@babel/types";
 
             }
           }
-            //console.log(this.last_history)
-            //this.pool_remain = res.data.rows[0].balance
-            /*
-            const s = new Date("2022-06-10T13:51:43.500")
-            const t = new Date()
-            const a = new Date("2022-06-11T00:00:00.000")
-            var x = new Date(a.setDate(a.getDate() + 1))
-            var z = new Date(a.setDate(a.getDate() - 1))
-            if(s >= a && s< x)
-            console.log(1)
-            */
 
 
         })
@@ -1002,17 +1028,9 @@ import { thisExpression } from "@babel/types";
 
       this.getTotalRefunds()
 
-      var today = new Date()
+      this.getDayStakeSeries()
 
-      var lastweek = new Date(today.setDate(today.getDate() - 7))
-
-      var date_check = new Date(lastweek)
-
-     // console.log("https://api.waxsweden.org:443/v2/history/get_actions?limit=100&account=maloanwaxme1&sort=asc&after="+lastweek.toISOString())
-
-    // console.log(this.seriesStake[0].data)
- //   console.log( this.optionsVisitor.xaxis.categories)
-  console.log("total_refund : "+ this.total_refund)
+    //  console.log(Icon.getIcon)
     },
   };
 </script>

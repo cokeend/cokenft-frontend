@@ -46,6 +46,7 @@
             <span class="w-full"> Dashboard </span>
           </router-link>
         </div>
+        <!-- //////////////////////////////////////////////////////////
         <div class="item mt-3">
           <menu-accordion>
             <template v-slot:icon>
@@ -122,6 +123,7 @@
             </template>
           </menu-accordion>
         </div>
+        
         <div class="item mt-3">
           <menu-accordion>
             <template v-slot:icon>
@@ -137,7 +139,10 @@
             </template>
           </menu-accordion>
         </div>
+        //////////////////////////////////////////////////////////// --> 
       </div>
+
+        <!-- ///////////////////////////////////
       <p class="font-medium text-gray-400 mt-4 dark:text-gray-600">
         UI Form & Tables
       </p>
@@ -183,6 +188,7 @@
           </button>
         </router-link>
       </div>
+      /////////////////////////////////////////////////-->
     </div>
   </nav>
 </template>
